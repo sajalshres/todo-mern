@@ -1,21 +1,40 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
-const AddTodo = () => {
+const AddTodo = ({ saveTodo }) => {
+  const [form, setForm] = useState();
+
+  const onTitleChange = (e) => {
+    setForm({ ...form, [e.currentTarget.id]: e.currentTarget.value });
+  };
+
+  const onHandleSubmit = (e) => {
+    e.preventDefault();
+    saveTodo(form);
+    setForm();
+    e.target.reset();
+  };
+
   return (
-    <div className="flex my-4">
-      <input
-        type="text"
-        placeholder="Add an item"
-        className="grow border-gray-400 border-2 rounded-md px-2 py-2"
-      ></input>
-      <button
-        type="button"
-        className="bg-green-600 border-green-600 border-2 rounded-md ml-1 px-2 py-2 w-10"
-      >
-        <FontAwesomeIcon icon={faPlus} color="white" />
-      </button>
-    </div>
+    <form className="Form" onSubmit={onHandleSubmit}>
+      <div className="flex my-4">
+        <input
+          id="title"
+          type="text"
+          placeholder="Add an item"
+          className="grow border-gray-400 border-2 rounded-md px-2 py-2"
+          onChange={onTitleChange}
+        ></input>
+        <button
+          type="submit"
+          className="bg-green-600 border-green-600 border-2 rounded-md ml-1 px-2 py-2 w-10"
+          disabled={form === undefined ? true : false}
+        >
+          <FontAwesomeIcon icon={faPlus} color="white" />
+        </button>
+      </div>
+    </form>
   );
 };
 
