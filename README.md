@@ -1,3 +1,3 @@
-# Todo MERN
+# Todo MNRN
 
-A simple todo app using MERN(MongoDB ExpressJS ReactJS NodeJS) stack.
+A simple todo app using MNRN(MongoDB NestJS ReactJS NodeJS) stack.
