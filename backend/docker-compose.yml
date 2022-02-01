@@ -1,7 +1,21 @@
 version: "3"
 
 services:
+  dev:
+    container_name: todo_api_dev
+    image: todo-api-dev:1.0.0
+    build: 
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    command: npm run start:dev
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
   mongodb:
+    container_name: mongo_db
     image: mongo:latest
     environment:
       - MONGODB_DATABASE="todo"
