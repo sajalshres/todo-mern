@@ -37,4 +37,12 @@ export class TodosService {
       .exec();
     return removedTodo;
   }
+
+  async clearAll(): Promise<object> {
+    const result = await this.todoModel.updateMany(
+      { status: true },
+      { status: false },
+    );
+    return { updated: result.modifiedCount };
+  }
 }

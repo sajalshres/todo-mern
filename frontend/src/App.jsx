@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchTodos } from "./services/api";
+import api from "./services/api";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -14,13 +14,49 @@ const App = () => {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    fetchTodos().then(({ data }) => {
+    api.get("/").then(({ data }) => {
       setTodos(data);
     });
   }, []);
 
-  const onSaveTodo = (form) => {
-    setTodos([...todos, { ...form }]);
+  const saveTodo = (form) => {
+    const todo = {
+      title: form.title,
+      status: false,
+    };
+
+    api.post("/", todo).then(({ data }) => {
+      setTodos([...todos, { ...data }]);
+    });
+  };
+
+  const updateTodo = (item) => {
+    api.patch(`/${item._id}`, item).then(({ data }) => {
+      const index = todos.findIndex((todo) => todo._id === item._id);
+      if (index !== -1) {
+        todos.splice(index, 1, data);
+        setTodos([...todos]);
+      }
+    });
+  };
+
+  const removeTodo = (id) => {
+    api.delete(`/${id}`).then(() => {
+      const index = todos.findIndex((item) => item._id === id);
+      if (index !== -1) {
+        todos.splice(index, 1);
+        setTodos([...todos]);
+      }
+    });
+  };
+
+  const clearAllTodo = () => {
+    api.post("/clear/").then(() => {
+      todos.forEach((todo) => {
+        todo.status = false;
+      });
+      setTodos([...todos]);
+    });
   };
 
   return (
@@ -29,17 +65,24 @@ const App = () => {
         <Header />
         <div className="mt-3">
           {/* Add todo item */}
-          <AddTodo saveTodo={onSaveTodo} />
+          <AddTodo saveTodo={saveTodo} />
           {/* List todo item */}
           <div className="mt-1 flex flex-col">
-            {todos.map((todoItem, idx) => (
-              <Todo key={idx} title={todoItem.title} />
+            {todos.map((todo) => (
+              <Todo
+                key={todo._id}
+                todo={todo}
+                updateTodo={updateTodo}
+                removeTodo={removeTodo}
+              />
             ))}
           </div>
           {/* Item status and clear */}
           <div className="mt-4 py-2 px-1 flex flex-row">
-            <TodoStatus count={todos.length} />
-            <ClearAll />
+            <TodoStatus
+              count={todos.filter((todo) => todo.status === false).length}
+            />
+            <ClearAll clearAllTodo={clearAllTodo} />
           </div>
         </div>
       </div>

@@ -21,12 +21,17 @@ export class TodosController {
 
   @Post()
   async create(@Body() createTodoDto: CreateTodoDto) {
-    await this.todosService.create(createTodoDto);
+    return this.todosService.create(createTodoDto);
   }
 
   @Get()
   async findAll(): Promise<Todo[]> {
     return this.todosService.findAll();
+  }
+
+  @Post('clear')
+  async clearAll(): Promise<object> {
+    return this.todosService.clearAll();
   }
 
   @Get(':id')

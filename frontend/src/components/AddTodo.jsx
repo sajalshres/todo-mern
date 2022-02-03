@@ -5,11 +5,11 @@ import { useState } from "react";
 const AddTodo = ({ saveTodo }) => {
   const [form, setForm] = useState();
 
-  const onTitleChange = (e) => {
+  const handleTitleChange = (e) => {
     setForm({ ...form, [e.currentTarget.id]: e.currentTarget.value });
   };
 
-  const onHandleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     saveTodo(form);
     setForm();
@@ -17,14 +17,14 @@ const AddTodo = ({ saveTodo }) => {
   };
 
   return (
-    <form className="Form" onSubmit={onHandleSubmit}>
+    <form className="Form" onSubmit={handleSubmit}>
       <div className="flex my-4">
         <input
           id="title"
           type="text"
           placeholder="Add an item"
           className="grow border-gray-400 border-2 rounded-md px-2 py-2"
-          onChange={onTitleChange}
+          onChange={handleTitleChange}
         ></input>
         <button
           type="submit"
